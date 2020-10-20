@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -76,22 +75,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mImagen = (ImageView)findViewById(R.id.imagen);
                 chronometer();
-                mImagen.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
 
-                    }
-                });
             }
         });
 
         save = (Button) findViewById(R.id.save);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //saveImage(URL1);
-            }
-        });
     }
 
     @Override
@@ -109,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    /*public void saveImage(String image) {
+
+    public void saveImage(String image) {
         Picasso.get().load(image).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -120,11 +109,11 @@ public class MainActivity extends AppCompatActivity {
                         directory.mkdirs();
                     }
                     FileOutputStream fileOutputStream = new FileOutputStream(new File(directory,
-                            new Date().toString().concat(String.valueOf(countBanner)).concat(".jpg")));
+                            new Date().toString().concat(".jpg")));
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream);
                     fileOutputStream.flush();
                     fileOutputStream.close();
-                    Toast.makeText(getApplicationContext(), "Save", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Se ha descargado la imagen", Toast.LENGTH_LONG).show();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e2) {
@@ -142,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }*/
+    }
 
 
     public void chronometer(){
@@ -150,13 +139,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                //evita que bloquees la interfaz gráfica
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         switch(currentTime){
-                            case 1:
+                            case 0:
+                                //Primera imagen
                                 Picasso.get().load(URL1).into(mImagen);
+                                //Al pulsar en la imagen te va al video
                                 mImagen.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -165,9 +155,18 @@ public class MainActivity extends AppCompatActivity {
                                         startActivity(mIntent);
                                     }
                                 });
+                                //al pulsar el botón SAVE se guarda la imágen 1
+                                save.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        saveImage(URL1);
+                                    }
+                                });
                                 break;
-                            case 2:
+                            case 1:
+                                //segunda imagen
                                 Picasso.get().load(URL2).into(mImagen);
+                                //Al pulsar en la imagen te va al video
                                 mImagen.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -176,9 +175,18 @@ public class MainActivity extends AppCompatActivity {
                                         startActivity(mIntent);
                                     }
                                 });
+                                //Al pulsar en el botón SAVE se guarda la imágen 2
+                                save.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        saveImage(URL2);
+                                    }
+                                });
                                 break;
-                            case 3:
+                            case 2:
+                                //Imagen 3
                                 Picasso.get().load(URL3).into(mImagen);
+                                //Al pulsar sobre la imagen te va al video
                                 mImagen.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -187,9 +195,17 @@ public class MainActivity extends AppCompatActivity {
                                         startActivity(mIntent);
                                     }
                                 });
+                                //Al pulsar en el botón SAVE se guarda la imagen 3
+                                save.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        saveImage(URL3);
+                                    }
+                                });
                                 break;
                         }
                         currentTime++;
+                        //Cuando el contador sea 5, se reinicia para mostrar la primera imagen otra vez
                         if(currentTime == 5){
                             currentTime = 0;
                         }
@@ -199,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mTimer = new Timer();
-        mTimer.schedule(mTimerTask,1,5000);//cada 10 segundos cambiará la imagen
+        mTimer.schedule(mTimerTask,5,5000);//cada 5 segundos cambiará la imagen
     }
 }
 
